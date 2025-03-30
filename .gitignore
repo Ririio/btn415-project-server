@@ -5,3 +5,5 @@ cmake-build-*/
 .vs/
 *.vcxproj*
 *.sln
+
+main
