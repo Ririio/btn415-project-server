@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(btn415_project_server main.cpp Thermostat.cpp
         Lights.h
         Lights.cpp
-)
+ "server.cpp" "Speaker.cpp" "Speaker.h")

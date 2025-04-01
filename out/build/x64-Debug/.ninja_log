@@ -1,0 +1,19 @@
+# ninja log v6
+7	56	7652183300276306	CMakeFiles/btn415_project_server.dir/Thermostat.cpp.obj.ddi	2111548426f5a221
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/Thermostat.cpp.obj.modmap	f959bbaf747d83da
+16	54	7652151467980550	CMakeFiles/btn415_project_server.dir/Lights.cpp.obj.ddi	836ce78f450765de
+352	663	7652183303721940	CMakeFiles/btn415_project_server.dir/Speaker.cpp.obj	55cabc061e64a1da
+19	56	7652153879169838	CMakeFiles/btn415_project_server.dir/main.cpp.obj.ddi	5afb2175594ddb42
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/CXX.dd	f959bbaf747d83da
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/main.cpp.obj.modmap	f959bbaf747d83da
+278	313	7652205465758952	C:/Users/kurtc/source/repos/btn415-project-server/out/build/x64-Debug/CMakeFiles/btn415_project_server.dir/CXXModules.json	f959bbaf747d83da
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/Lights.cpp.obj.modmap	f959bbaf747d83da
+345	662	7652183303651846	CMakeFiles/btn415_project_server.dir/Thermostat.cpp.obj	54c0d812ab4e4650
+188	238	7652151469701284	CMakeFiles/btn415_project_server.dir/Lights.cpp.obj	722dc95f47754344
+314	363	7652153882120465	CMakeFiles/btn415_project_server.dir/main.cpp.obj	58908865d551b74d
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/server.cpp.obj.modmap	f959bbaf747d83da
+1501	1696	7652205477988062	btn415_project_server.exe	c388151bf99fbd43
+5	277	7652205463025709	CMakeFiles/btn415_project_server.dir/server.cpp.obj.ddi	fb42c86e2eb2cd3f
+315	1501	7652205466128983	CMakeFiles/btn415_project_server.dir/server.cpp.obj	824e2fdcd80a6174
+17	57	7652183300366300	CMakeFiles/btn415_project_server.dir/Speaker.cpp.obj.ddi	a3f6a90198fb4005
+278	313	7652205465758952	CMakeFiles/btn415_project_server.dir/Speaker.cpp.obj.modmap	f959bbaf747d83da

@@ -1,0 +1,11 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles\btn415_project_server.dir\main.cpp.obj: dyndep
+
+build CMakeFiles\btn415_project_server.dir\Thermostat.cpp.obj: dyndep
+
+build CMakeFiles\btn415_project_server.dir\Lights.cpp.obj: dyndep
+
+build CMakeFiles\btn415_project_server.dir\server.cpp.obj: dyndep
+
+build CMakeFiles\btn415_project_server.dir\Speaker.cpp.obj: dyndep
+
