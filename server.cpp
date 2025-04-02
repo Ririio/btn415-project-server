@@ -38,155 +38,144 @@ Speaker speakerArray[4] = { Speaker(50, false),Speaker(50, false) ,Speaker(50, f
 void handleClient(SOCKET clientSocket) {
     char buffer[BUFFER_SIZE] = { 0 };
 
-    // Receive message from the client
-    int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-    if (bytesReceived <= 0) {
-        std::cerr << "Error receiving data from client" << std::endl;
-        closesocket(clientSocket);
-        return;
-    }
 
-    buffer[bytesReceived] = '\0'; // Null-terminate the buffer
-    std::cout << "Received: " << buffer << std::endl;
+    while (true) {
+        // Receive message from the client
+        int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+        if (bytesReceived <= 0) {
+            std::cerr << "Error receiving data from client" << std::endl;
+            closesocket(clientSocket);
+            return;
+        }
+
+        buffer[bytesReceived] = '\0'; // Null-terminate the buffer
+        std::cout << "Received: " << buffer << std::endl;
     
 
-    std::string request(buffer);
+        std::string request(buffer);
 
-    //process GET requests
-    if (request.substr(0, 3) == "GET") {
-        std::string path = request.substr(4); //Everything after GET
-
-        //process till first '/'
-        size_t pos = path.find('/');
-        std::string device = path.substr(0, pos);
-        std::cout << "DEVICE IS: " << device;
-        int index = -1;
-
-        if (pos != std::string::npos) { // Ensure '/' was found
-            path = path.substr(pos + 1); // Extract the portion after '/'
-            pos = path.find('/');
-            std::string indexStr = path.substr(0, pos);
-            index = std::stoi(indexStr); // Convert to int
-            std::cout << "Index is: " << index << std::endl;
+        // Check if the client sent "exit"
+        if (request == "exit") {
+            std::cout << "Client requested to close the connection." << std::endl;
+            break;
         }
-        //DEVICE AND INDEX IS FOUND:
-        if (device == "lights") {
-            //check if index is out of scope
-            if (index < NUM_LIGHTS && index >= 0) {
-                //check if there are more commands after, else just return status of light
-                path = path.substr(pos + 1);
-                pos = path.find('/');
 
-                //if there was another '/' after the index
-                if (pos != std::string::npos) {
-                    std::string command = path.substr(0, pos);
-                    if (command == "switch") {
-                        lightsArray[index].changeState();
-                        std::string response = "Light " + std::to_string(index) + " has been turned " + (lightsArray[index].getState() ? "on\n" : "off\n");
-                        send(clientSocket, response.c_str(), response.length(), 0);
-                    }
-                }
-                else {
-                    std::string response = "Light " + std::to_string(index) + " is " + (lightsArray[index].getState() ? "on\n" : "off\n");
-                    send(clientSocket, response.c_str(), response.length(), 0);
-                }
-            }
-            else {
-                std::string response = "INDEX IS OUT OF SCOPE";
-                send(clientSocket, response.c_str(), response.length(), 0);
-            }
-        }
-        else if (device == "speakers") {
-            //check if index is out of scope
-            if (index < NUM_SPEAKERS && index >= 0) {
-                //check if there are more commands after, else just return status of light
-                path = path.substr(pos + 1);
-                pos = path.find('/');
+        //process GET requests
+        if (request.substr(0, 3) == "GET") {
+            std::string path = request.substr(4); //Everything after GET
 
-                //if there was another '/' after the index
-                if (pos != std::string::npos) {
-                    std::string command = path.substr(0, pos);
-                    if (command == "switch") {
-                        speakerArray[index].switchButton();
-                        std::string response = "Speaker " + std::to_string(index) + " has been turned " + (speakerArray[index].getState() ? "on\n" : "off\n");
-                        send(clientSocket, response.c_str(), response.length(), 0);
-                    }
-                    else if (command == "setVolume") {
-                        path = path.substr(pos + 1);
-                        pos = path.find('/');
-                        if (pos != std::string::npos) {
-                            int vol = std::stoi(path.substr(0, pos));
-                            speakerArray[index].setVolume(vol);
-                            std::string response = "Speaker " + std::to_string(index) + " volume has been set to " + std::to_string(vol) + "\n";
+            //process till first '/'
+            size_t pos = path.find('/');
+            std::string device = path.substr(0, pos);
+            std::cout << "DEVICE IS: " << device;
+            int index = -1;
+
+            if (pos != std::string::npos) { // Ensure '/' was found
+                path = path.substr(pos + 1); // Extract the portion after '/'
+                pos = path.find('/');
+                std::string indexStr = path.substr(0, pos);
+                index = std::stoi(indexStr); // Convert to int
+                std::cout << "Index is: " << index << std::endl;
+            }
+            //DEVICE AND INDEX IS FOUND:
+            if (device == "lights") {
+                //check if index is out of scope
+                if (index < NUM_LIGHTS && index >= 0) {
+                    //check if there are more commands after, else just return status of light
+                    path = path.substr(pos + 1);
+                    pos = path.find('/');
+
+                    //if there was another '/' after the index
+                    if (pos != std::string::npos) {
+                        std::string command = path.substr(0, pos);
+                        if (command == "switch") {
+                            lightsArray[index].changeState();
+                            std::string response = "Light " + std::to_string(index) + " has been turned " + (lightsArray[index].getState() ? "on\n" : "off\n");
                             send(clientSocket, response.c_str(), response.length(), 0);
                         }
                     }
-                }
-                else {
-                    std::string response = "Speaker " + std::to_string(index) + " is " + (speakerArray[index].getState() ? "on\n" : "off\n");
-                    send(clientSocket, response.c_str(), response.length(), 0);
-                }
-            }
-            else {
-                std::string response = "INDEX IS OUT OF SCOPE";
-                send(clientSocket, response.c_str(), response.length(), 0);
-            }
-        }
-        else if (device == "thermostats") {
-            //check if index is out of scope
-            if (index < NUM_THERMOSTAT && index >= 0) {
-                //check if there are more commands after, else just return status of light
-                path = path.substr(pos + 1);
-                pos = path.find('/');
-
-                //if there was another '/' after the index
-                if (pos != std::string::npos) {
-                    std::string command = path.substr(0, pos);
-                    if (command == "switch") {
-                        thermostatArray[index].switchButton();
-                        std::string response = "Thermostat " + std::to_string(index) + " has been turned " + (thermostatArray[index].getState() ? "on" : "off") + ", temperature is " + std::to_string(thermostatArray[index].getTemperature()) + "C\n";
+                    else {
+                        std::string response = "Light " + std::to_string(index) + " | " + (lightsArray[index].getState() ? " ON \n" : "ODD\n");
                         send(clientSocket, response.c_str(), response.length(), 0);
                     }
-                    else if (command == "setTemp") {
-                        path = path.substr(pos + 1);
-                        pos = path.find('/');
-                        if (pos != std::string::npos) {
-                            float temp = std::stof(path.substr(0, pos));
-                            thermostatArray[index].setTemperature(temp);
-                            std::string response = "Thermostat " + std::to_string(index) + " volume has been set to " + std::to_string(temp) + "\n";
-                            send(clientSocket, response.c_str(), response.length(), 0);
-                        }
-                    }
                 }
                 else {
-                    std::string response = "Thermostat " + std::to_string(index) + " is " + (thermostatArray[index].getState() ? "on" : "off") + ", at temperature " + std::to_string(thermostatArray[index].getTemperature()) + "C\n";
+                    std::string response = "INDEX IS OUT OF SCOPE";
                     send(clientSocket, response.c_str(), response.length(), 0);
                 }
             }
-            else {
-                std::string response = "INDEX IS OUT OF SCOPE";
-                send(clientSocket, response.c_str(), response.length(), 0);
+            else if (device == "speakers") {
+                //check if index is out of scope
+                if (index < NUM_SPEAKERS && index >= 0) {
+                    //check if there are more commands after, else just return status of light
+                    path = path.substr(pos + 1);
+                    pos = path.find('/');
+
+                    //if there was another '/' after the index
+                    if (pos != std::string::npos) {
+                        std::string command = path.substr(0, pos);
+                        if (command == "switch") {
+                            speakerArray[index].switchButton();
+                            std::string response = "Speaker " + std::to_string(index) + " has been turned " + (speakerArray[index].getState() ? "on\n" : "off\n");
+                            send(clientSocket, response.c_str(), response.length(), 0);
+                        }
+                        else if (command == "setVolume") {
+                            path = path.substr(pos + 1);
+                            pos = path.find('/');
+                            if (pos != std::string::npos) {
+                                int vol = std::stoi(path.substr(0, pos));
+                                speakerArray[index].setVolume(vol);
+                                std::string response = "Speaker " + std::to_string(index) + " volume set to " + std::to_string(vol) + "\n";
+                                send(clientSocket, response.c_str(), response.length(), 0);
+                            }
+                        }
+                    }
+                    else {
+                        std::string response = "Speaker " + std::to_string(index) + " | " + (speakerArray[index].getState() ? "ON" : "OFF") + " | VOL: " + std::to_string(speakerArray[index].getVolume()) + "\n";
+                        send(clientSocket, response.c_str(), response.length(), 0);
+                    }
+                }
+                else {
+                    std::string response = "INDEX IS OUT OF SCOPE";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
             }
-        }
+            else if (device == "thermostats") {
+                //check if index is out of scope
+                if (index < NUM_THERMOSTAT && index >= 0) {
+                    //check if there are more commands after, else just return status of light
+                    path = path.substr(pos + 1);
+                    pos = path.find('/');
 
-
-
-    }
-
-
-
-    if (std::string(buffer) == "start") {
-        std::ifstream file("test.txt");
-        if (file.is_open()) {
-            std::string line;
-            while (getline(file, line)) {
-                send(clientSocket, line.c_str(), line.length(), 0);
-                send(clientSocket, "\n", 1, 0);
+                    //if there was another '/' after the index
+                    if (pos != std::string::npos) {
+                        std::string command = path.substr(0, pos);
+                        if (command == "switch") {
+                            thermostatArray[index].switchButton();
+                            std::string response = "Thermostat " + std::to_string(index) + " has been turned " + (thermostatArray[index].getState() ? "on" : "off") + ", TEMP: " + std::to_string(thermostatArray[index].getTemperature()) + "C\n";
+                            send(clientSocket, response.c_str(), response.length(), 0);
+                        }
+                        else if (command == "setTemp") {
+                            path = path.substr(pos + 1);
+                            pos = path.find('/');
+                            if (pos != std::string::npos) {
+                                float temp = std::stof(path.substr(0, pos));
+                                thermostatArray[index].setTemperature(temp);
+                                std::string response = "Thermostat " + std::to_string(index) + " temp has been set to " + std::to_string(temp) + "\n";
+                                send(clientSocket, response.c_str(), response.length(), 0);
+                            }
+                        }
+                    }
+                    else {
+                        std::string response = "Thermostat " + std::to_string(index) + " | " + (thermostatArray[index].getState() ? "ON" : "OFF") + " | TEMP: " + std::to_string(thermostatArray[index].getTemperature()) + "C\n";
+                        send(clientSocket, response.c_str(), response.length(), 0);
+                    }
+                }
+                else {
+                    std::string response = "INDEX IS OUT OF SCOPE";
+                    send(clientSocket, response.c_str(), response.length(), 0);
+                }
             }
-        }
-        else {
-            std::string error = "Error opening file\n";
-            send(clientSocket, error.c_str(), error.length(), 0);
         }
     }
 

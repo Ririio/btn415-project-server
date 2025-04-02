@@ -539,7 +539,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Users/kurtc/Source/Repos/btn415-project-server/out/install/x64-Debug"
+			"value" : "C:/Users/kurtc/source/repos/btn415-project-server/out/install/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_LINKER",

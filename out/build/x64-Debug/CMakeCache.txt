@@ -84,7 +84,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/Users/kurtc/source/repos/btn415-project-server/out/build/x64-Debug/CMakeFiles/pkgRedirects
 
 //No help, variable specified on the command line.
-CMAKE_INSTALL_PREFIX:PATH=C:/Users/kurtc/Source/Repos/btn415-project-server/out/install/x64-Debug
+CMAKE_INSTALL_PREFIX:PATH=C:/Users/kurtc/source/repos/btn415-project-server/out/install/x64-Debug
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/link.exe
