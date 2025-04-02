@@ -23,22 +23,19 @@
 
 // ---- SMART HOME SYSTEM --------------------------------------------
 // 
-//create an array of lights
 int NUM_LIGHTS = 10;
 int NUM_THERMOSTAT = 1;
 int NUM_SPEAKERS = 4;
 
 Lights lightsArray[10] = { Lights(false), Lights(false), Lights(false), Lights(false),
-                     Lights(false), Lights(false), Lights(false), Lights(false),
-                     Lights(false), Lights(false) };
+    Lights(false), Lights(false), Lights(false), Lights(false),
+    Lights(false), Lights(false) };
 Thermostat thermostatArray[1] = { Thermostat(20, false) };
 Speaker speakerArray[4] = { Speaker(50, false),Speaker(50, false) ,Speaker(50, false) ,Speaker(50, false) };
 
 
 void handleClient(SOCKET clientSocket) {
     char buffer[BUFFER_SIZE] = { 0 };
-
-
     while (true) {
         // Receive message from the client
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
@@ -47,10 +44,8 @@ void handleClient(SOCKET clientSocket) {
             closesocket(clientSocket);
             return;
         }
-
         buffer[bytesReceived] = '\0'; // Null-terminate the buffer
         std::cout << "Received: " << buffer << std::endl;
-    
 
         std::string request(buffer);
 
@@ -59,7 +54,6 @@ void handleClient(SOCKET clientSocket) {
             std::cout << "Client requested to close the connection." << std::endl;
             break;
         }
-
         //process GET requests
         if (request.substr(0, 3) == "GET") {
             std::string path = request.substr(4); //Everything after GET
@@ -75,7 +69,7 @@ void handleClient(SOCKET clientSocket) {
                 pos = path.find('/');
                 std::string indexStr = path.substr(0, pos);
                 index = std::stoi(indexStr); // Convert to int
-                std::cout << "Index is: " << index << std::endl;
+                std::cout << " " << index << std::endl;
             }
             //DEVICE AND INDEX IS FOUND:
             if (device == "lights") {
@@ -95,7 +89,7 @@ void handleClient(SOCKET clientSocket) {
                         }
                     }
                     else {
-                        std::string response = "Light " + std::to_string(index) + " | " + (lightsArray[index].getState() ? " ON \n" : "ODD\n");
+                        std::string response = "Light " + std::to_string(index) + " | " + (lightsArray[index].getState() ? " ON \n" : "OFF\n");
                         send(clientSocket, response.c_str(), response.length(), 0);
                     }
                 }
