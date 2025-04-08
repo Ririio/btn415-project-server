@@ -84,7 +84,11 @@ void handleClient(SOCKET clientSocket) {
                         std::string command = path.substr(0, pos);
                         if (command == "switch") {
                             lightsArray[index].changeState();
-                            std::string response = "Light " + std::to_string(index) + " has been turned " + (lightsArray[index].getState() ? "on\n" : "off\n");
+                            if (!lightsArray[index].getState())
+                            {
+                                lightsArray[index].setBrightness(0);
+                            }
+                            std::string response = "Light " + std::to_string(index) + " has been turned " + (lightsArray[index].getState() ? "on\n" : "off and brightness is 0\n");
                             send(clientSocket, response.c_str(), response.length(), 0);
                         }
                         else if (command == "setBrightness") {
@@ -92,9 +96,16 @@ void handleClient(SOCKET clientSocket) {
                             pos = path.find('/');
                             if (pos != std::string::npos) {
                                 int bright = std::stoi(path.substr(0, pos));
-                                lightsArray[index].setBrightness(bright);
-                                std::string response = "Light " + std::to_string(index) + " brightness set to " + std::to_string(bright) + "\n";
-                                send(clientSocket, response.c_str(), response.length(), 0);
+                                if (lightsArray[index].getState())
+                                {
+                                    lightsArray[index].setBrightness(bright);
+                                    std::string response = "Light " + std::to_string(index) + " brightness set to " + std::to_string(bright) + "\n";
+                                    send(clientSocket, response.c_str(), response.length(), 0);
+                                }
+                                else {
+                                    std::string response =  "The light needs to be turned on to change the brightness \n";
+                                    send(clientSocket, response.c_str(), response.length(), 0);
+                                }
                             }
                         }
                     }
