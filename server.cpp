@@ -27,9 +27,9 @@ int NUM_LIGHTS = 10;
 int NUM_THERMOSTAT = 1;
 int NUM_SPEAKERS = 4;
 
-Lights lightsArray[10] = { Lights(false), Lights(false), Lights(false), Lights(false),
-    Lights(false), Lights(false), Lights(false), Lights(false),
-    Lights(false), Lights(false) };
+Lights lightsArray[10] = { Lights(false, 0), Lights(false, 0), Lights(false, 0), Lights(false, 0),
+    Lights(false, 0), Lights(false, 0), Lights(false, 0), Lights(false, 0),
+    Lights(false, 0), Lights(false, 0) };
 Thermostat thermostatArray[1] = { Thermostat(20, false) };
 Speaker speakerArray[4] = { Speaker(50, false),Speaker(50, false) ,Speaker(50, false) ,Speaker(50, false) };
 
@@ -87,9 +87,19 @@ void handleClient(SOCKET clientSocket) {
                             std::string response = "Light " + std::to_string(index) + " has been turned " + (lightsArray[index].getState() ? "on\n" : "off\n");
                             send(clientSocket, response.c_str(), response.length(), 0);
                         }
+                        else if (command == "setBrightness") {
+                            path = path.substr(pos + 1);
+                            pos = path.find('/');
+                            if (pos != std::string::npos) {
+                                int bright = std::stoi(path.substr(0, pos));
+                                lightsArray[index].setBrightness(bright);
+                                std::string response = "Light " + std::to_string(index) + " brightness set to " + std::to_string(bright) + "\n";
+                                send(clientSocket, response.c_str(), response.length(), 0);
+                            }
+                        }
                     }
                     else {
-                        std::string response = "Light " + std::to_string(index) + " | " + (lightsArray[index].getState() ? " ON \n" : "OFF\n");
+                        std::string response = "Light " + std::to_string(index) + " | " + (lightsArray[index].getState() ? "ON" : "OFF") + " | BRIGHTNESS: " + std::to_string(lightsArray[index].getBrightness()) + "\n";
                         send(clientSocket, response.c_str(), response.length(), 0);
                     }
                 }

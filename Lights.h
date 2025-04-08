@@ -8,9 +8,12 @@
 class Lights {
     private:
         bool switchState;
+        int brightness;
     public:
-        Lights(bool ss);
+        Lights(bool ss, int b);
         void changeState();
+        void setBrightness(const int newBright);
+        int getBrightness() const;
         bool getState() const;
 };
 
